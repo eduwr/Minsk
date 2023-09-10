@@ -61,6 +61,29 @@ namespace Minsk.mc
         }
     }
 
+    sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
+    {
+        public ParenthesizedExpressionSyntax(SyntaxToken openParenthesisToken, ExpressionSyntax expression, SyntaxToken closeParenthesisToken)
+        {
+            OpenParenthesisToken = openParenthesisToken;
+            Expression = expression;
+            CloseParenthesisToken = closeParenthesisToken;
+        }
+
+        public SyntaxToken OpenParenthesisToken { get; }
+        public ExpressionSyntax Expression { get; }
+        public SyntaxToken CloseParenthesisToken { get; }
+
+        public override SyntaxKind Kind => SyntaxKind.ParenthesizedExpression;
+
+        public override IEnumerable<SyntaxNode> GetChildren()
+        {
+            yield return OpenParenthesisToken;
+            yield return Expression;
+            yield return CloseParenthesisToken;
+        }
+    }
+
     sealed class SyntaxTree
     {
         public IReadOnlyList<string> Diagnostics { get; }
@@ -136,6 +159,12 @@ namespace Minsk.mc
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
+
+        private ExpressionSyntax ParseExpression()
+        {
+            return ParseTerm();
+        }
+
         public SyntaxTree Parse()
         {
             var expression = ParseTerm();
@@ -181,6 +210,17 @@ namespace Minsk.mc
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
+
+            if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+            {
+
+                var left = NextToken();
+                var expression = ParseExpression();
+                var right = Match(SyntaxKind.CloseParenthesisToken);
+
+                return new ParenthesizedExpressionSyntax(left, expression, right);
+            }
+
             var numberToken = Match(SyntaxKind.NumberToken);
             return new NumberExpressionSyntax(numberToken);
         }

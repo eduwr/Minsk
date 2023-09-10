@@ -46,7 +46,11 @@ namespace Minsk.mc
                     return left / right;
                 else
                     throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}");
+            }
 
+            if (node is ParenthesizedExpressionSyntax p)
+            {
+                return EvaluateExpression(p.Expression);
             }
 
             throw new Exception($"Unexpected node {node.Kind}");

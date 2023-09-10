@@ -22,7 +22,8 @@ namespace Minsk.mc
         BadToken,
         EnfOfFileToken,
         NumberExpression,
-        BinaryExpression
+        BinaryExpression,
+        ParenthesizedExpression
     }
 
     class SyntaxToken : SyntaxNode
