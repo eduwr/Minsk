@@ -12,18 +12,18 @@ while (true)
 
 
     var parser = new Parser(line);
-    var expression = parser.Parse();
+    var syntaxTree = parser.Parse();
 
     var color = Console.ForegroundColor;
     Console.ForegroundColor = ConsoleColor.DarkGray;
-    PrettyPrint(expression);
+    PrettyPrint(syntaxTree.Root);
     Console.ForegroundColor = color;
 
-       if (parser.Diagnostics.Any())
+       if (syntaxTree.Diagnostics.Any())
     {
         Console.ForegroundColor = ConsoleColor.DarkRed;
 
-        foreach(var diagnostic in parser.Diagnostics)
+        foreach(var diagnostic in syntaxTree.Diagnostics)
         {
             Console.WriteLine(diagnostic);
         }

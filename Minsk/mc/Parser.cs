@@ -61,6 +61,21 @@ namespace Minsk.mc
         }
     }
 
+    sealed class SyntaxTree
+    {
+        public IReadOnlyList<string> Diagnostics { get; }
+        public ExpressionSyntax Root { get; }
+        public SyntaxToken EnfOfFileToken { get; }
+
+        public SyntaxTree(IEnumerable<string> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken)
+        {
+            Diagnostics = diagnostics.ToArray();
+            Root = root;
+            EnfOfFileToken = endOfFileToken;
+        }
+
+    }
+
     class Parser
     {
         private SyntaxToken[] _tokens;
@@ -121,7 +136,14 @@ namespace Minsk.mc
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
-        public ExpressionSyntax Parse()
+        public SyntaxTree Parse()
+        {
+            var expression = ParseExpression();
+            var endOfFileToken = Match(SyntaxKind.EnfOfFileToken);
+            return new SyntaxTree(_diagnostics, expression, endOfFileToken);
+        }
+
+        private ExpressionSyntax ParseExpression()
         {
             var left = ParsePrimaryExpression();
 
