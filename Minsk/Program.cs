@@ -19,11 +19,17 @@ while (true)
     PrettyPrint(syntaxTree.Root);
     Console.ForegroundColor = color;
 
-       if (syntaxTree.Diagnostics.Any())
+    if (!syntaxTree.Diagnostics.Any())
+    {
+        var e = new Evaluator(syntaxTree.Root);
+        var result = e.Evaluate();
+        Console.WriteLine(result);
+    }
+    else
     {
         Console.ForegroundColor = ConsoleColor.DarkRed;
 
-        foreach(var diagnostic in syntaxTree.Diagnostics)
+        foreach (var diagnostic in syntaxTree.Diagnostics)
         {
             Console.WriteLine(diagnostic);
         }
