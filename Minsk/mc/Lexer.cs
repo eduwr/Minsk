@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Minsk.Lexer
+namespace Minsk.mc
 
 {
 
@@ -20,12 +20,14 @@ namespace Minsk.Lexer
         OpenParenthesisToken,
         CloseParenthesisToken,
         BadToken,
-        EnfOfFileToken
+        EnfOfFileToken,
+        NumberExpression,
+        BinaryExpression
     }
 
-    class SyntaxToken
+    class SyntaxToken : SyntaxNode
     {
-        public SyntaxKind Kind { get; }
+        public override SyntaxKind Kind { get; }
         public int Position { get; }
         public string Text { get; }
         public object Value { get; }
@@ -36,6 +38,11 @@ namespace Minsk.Lexer
             Position = position;
             Text = text;
             Value = value;
+        }
+
+        public override IEnumerable<SyntaxNode> GetChildren()
+        {
+            return Enumerable.Empty<SyntaxNode>();
         }
     }
 
