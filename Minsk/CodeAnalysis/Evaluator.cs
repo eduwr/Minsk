@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Minsk.mc
+namespace Minsk.CodeAnalysis
 {
     class Evaluator
     {
@@ -23,8 +23,6 @@ namespace Minsk.mc
 
         private int EvaluateExpression(ExpressionSyntax node)
         {
-           // BinaryExpression
-           // NumberExpression
 
             if(node is NumberExpressionSyntax n)
             {
