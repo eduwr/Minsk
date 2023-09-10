@@ -3,21 +3,36 @@ using Minsk.mc;
 
 Console.WriteLine("Hello, Minsk Compiler!");
 
+bool showTree = false;
 
 while (true)
 {
     Console.Write("> ");
     var line = Console.ReadLine();
-    if (string.IsNullOrEmpty(line)) return;
+    if (string.IsNullOrWhiteSpace(line)) return;
 
 
-    var parser = new Parser(line);
-    var syntaxTree = parser.Parse();
+    if (line == "#showTree")
+    {
+        showTree = !showTree;
+        Console.WriteLine(showTree ? "Showing parse trees." : "NOT showing parse trees");
+        continue;
+    }
 
-    var color = Console.ForegroundColor;
-    Console.ForegroundColor = ConsoleColor.DarkGray;
-    PrettyPrint(syntaxTree.Root);
-    Console.ForegroundColor = color;
+    var syntaxTree = SyntaxTree.Parse(line);
+
+    if (showTree)
+    {
+        var color = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        PrettyPrint(syntaxTree.Root);
+        Console.ForegroundColor = color;
+
+    } else if (line == "#cls")
+    {
+        Console.Clear();
+        continue;
+    }
 
     if (!syntaxTree.Diagnostics.Any())
     {
@@ -27,20 +42,18 @@ while (true)
     }
     else
     {
+        var color = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.DarkRed;
-
         foreach (var diagnostic in syntaxTree.Diagnostics)
         {
             Console.WriteLine(diagnostic);
         }
-
         Console.ForegroundColor = color;
     }
 
 }
 
-
-void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
+static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
 {
     var marker = isLast ? "└──" : "├──";
 

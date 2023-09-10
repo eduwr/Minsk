@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,6 +96,13 @@ namespace Minsk.mc
             Diagnostics = diagnostics.ToArray();
             Root = root;
             EnfOfFileToken = endOfFileToken;
+        }
+
+        public static SyntaxTree Parse(string text)
+        {
+            var parser = new Parser(text);
+            return parser.Parse();
+
         }
 
     }
