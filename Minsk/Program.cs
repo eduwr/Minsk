@@ -19,7 +19,17 @@ while (true)
     PrettyPrint(expression);
     Console.ForegroundColor = color;
 
+       if (parser.Diagnostics.Any())
+    {
+        Console.ForegroundColor = ConsoleColor.DarkRed;
 
+        foreach(var diagnostic in parser.Diagnostics)
+        {
+            Console.WriteLine(diagnostic);
+        }
+
+        Console.ForegroundColor = color;
+    }
 
 }
 

@@ -64,6 +64,7 @@ namespace Minsk.mc
     class Parser
     {
         private SyntaxToken[] _tokens;
+        private List<string> _diagnostics = new List<string>();
         private int _position;
 
         public Parser(string text)
@@ -87,7 +88,10 @@ namespace Minsk.mc
             } while (token.Kind != SyntaxKind.EnfOfFileToken);
 
             _tokens = tokens.ToArray();
+            _diagnostics.AddRange(lexer.Diagnostics);
         }
+
+        public IEnumerable<string> Diagnostics => _diagnostics;
 
         private SyntaxToken Peek(int offset)
         {
@@ -112,6 +116,8 @@ namespace Minsk.mc
         {
             if (Current.Kind == kind)
                 return NextToken();
+
+            _diagnostics.Add($"Error: Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
